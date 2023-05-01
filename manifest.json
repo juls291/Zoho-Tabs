@@ -1,0 +1,32 @@
+{
+  "name": "Zoho Tabs",
+  "version": "0.1",
+  "description": "Only works for translogica support agents. Replaces the title of the current zoho tab with the title of the ticket.",
+  "manifest_version": 3,
+  "icons": {
+    "48" : "icon48.png"
+  },
+  "action" : {
+    "default_popup": "popup.html",
+    "default_icon": "icon48.png"
+  },
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "scripting",
+    "webNavigation"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+        "matches": ["https://helpcenter.translogica.net/agent/translogica/support/tickets/*"],
+        "js" : ["content.js"]
+    }
+  ]
+}
