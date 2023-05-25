@@ -1,31 +1,30 @@
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.type === "getTabTitle") {
-      sendResponse({tabtitle: document.title});
-    }
-  });
-
-const selector = 'h1[data-id="caseSubjectText"]';
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.type === "getTicketTitle") {
-    const element = document.querySelector(selector);
-    sendResponse({tickettitle: element.dataset.title});
-  }
-});
+let selector = 'h1[data-id="caseSubjectText"]';
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.type === "setTabTitleToTicketTitle") {
-    const element = document.querySelector(selector);
+  if (request.type === "getTabTitle") {
+    sendResponse({ tabtitle: document.title });
+  } else if (request.type === "getTicketTitle") {
+    let element = document.querySelector(selector);
+    sendResponse({ tickettitle: element ? element.dataset.title : "" });
+  } else if (request.type === "setTabTitleToTicketTitle") {
+    let element = document.querySelector(selector);
 
-    let title = element.dataset.title;
-    const prefixRegex = /^\[.*?\]\s*/; // matches any string that starts with "[" and ends with "]"
-    title = title.replace(prefixRegex, ''); // remove the matched prefix from title
-    if (title.startsWith("WG: ")) {
-      title = title.slice(4); // Remove "WG: "
-    } else if (title.startsWith("RE: ")) {
-      title = title.slice(4); // Remove "RE: "
-    }
+    if (element) {
+      let title = element.dataset.title;
+      let prefixRegex = /^\[.*?\]\s*/; // Migros, Lagermax
+      title = title.replace(prefixRegex, "");
+      if (title.startsWith("WG: ")) {
+        title = title.slice(4);
+      } else if (title.startsWith("RE: ")) {
+        title = title.slice(4);
+      } else if (title.startsWith("##")) {
+        title = title.slice(9); // Evola
+      }
 
       document.title = title;
-      sendResponse({success: true});
+      sendResponse({ success: true });
+    } else {
+      sendResponse({ success: false });
+    }
   }
 });
