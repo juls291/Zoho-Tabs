@@ -21,6 +21,13 @@
     "webNavigation",
     "page_action"
   ],
+  "page_action": {
+    "default_icon": {
+      "16": "path/to/default-icon.png",
+      "48": "path/to/default-icon.png",
+      "128": "path/to/default-icon.png"
+    }
+  },
   "background": {
     "service_worker": "background.js"
   },
