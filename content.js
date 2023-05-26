@@ -17,8 +17,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         title = title.slice(4);
       } else if (title.startsWith("RE: ")) {
         title = title.slice(4);
+      } else if (title.startsWith("AW: ")) {
+        title = title.slice(4);
       } else if (title.startsWith("##")) {
         title = title.slice(9); // Evola
+      } else if (title.startsWith("PD: ")) {
+        title = title.slice(4);
       }
 
       document.title = title;
@@ -27,4 +31,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       sendResponse({ success: false });
     }
   }
+  else if (request.type === "getPriorityValue") {
+    let element = document.querySelector('input[data-id="priority_textBox"]');
+    sendResponse({ priorityValue: element ? element.value : "" });
+  }  
 });

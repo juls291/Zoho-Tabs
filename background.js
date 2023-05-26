@@ -33,4 +33,29 @@ function compareTitles(tabId) {
       }
     });
   }
+
+  chrome.tabs.sendMessage(tabId, { type: "getPriorityValue" }, (response) => {
+    if (response && response.priorityValue) {
+      let priorityValue = response.priorityValue;
+      setTabIcon(tabId, priorityValue);
+    }
+  });
+}
+
+function setTabIcon(tabId, priorityValue) {
+  let iconPath;
+
+  if (priorityValue === "high") {
+    iconPath = "path/to/high-icon.png";
+  } else if (priorityValue === "medium") {
+    iconPath = "path/to/medium-icon.png";
+  } else if (priorityValue === "low") {
+    iconPath = "path/to/low-icon.png";
+  } else {
+    iconPath = "path/to/default-icon.png";
+  }
+
+  chrome.tabs.setIcon(tabId, { path: iconPath }, () => {
+    console.log("Tab icon set");
+  });
 }
